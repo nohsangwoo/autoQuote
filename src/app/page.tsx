@@ -84,7 +84,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen p-8" style={{backgroundColor: '#F2F2F2'}}>
+    <div className="min-h-screen p-8" style={{backgroundColor: '#E8E8E8'}}>
       {/* Control Buttons */}
       {isEditing && (
         <div className="max-w-4xl mx-auto mb-4 print:hidden">
@@ -116,17 +116,17 @@ export default function Home() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none">
+      <div className="max-w-4xl mx-auto shadow-lg print:shadow-none" style={{backgroundColor: '#F4F4F2'}}>
         {/* Header */}
-        <div className="border-b-2 border-dashed p-8" style={{borderColor: '#ADAFC4'}}>
-          <div className="flex justify-between items-start">
+        <div className="border-b-2 border-dashed px-8 pt-24 pb-8" style={{borderColor: '#ADAFC4'}}>
+          <div className="flex justify-between items-end ">
             <div className="text-sm leading-relaxed" style={{color: '#2A2F2F'}}>
               <div>서울특별시 강남구 압구정로 35</div>
               <div>남경빌딩 4층 4419호</div>
             </div>
-            <div className="text-right">
-              <h1 className="text-4xl font-bold tracking-widest" style={{color: '#2A2F2F'}}>KEYKEEPER</h1>
-              <span className="text-sm align-top" style={{color: '#2A2F2F'}}>©</span>
+            <div className="text-right flex flex-col items-end relative">
+              <h1 className="text-5xl font-black tracking-widest" style={{color: '#2A2F2F'}}>KEYKEEPER</h1>
+              <span className="absolute top-0 right-[-10px] text-sm font-[700] align-top" style={{color: '#2A2F2F'}}>©</span>
             </div>
           </div>
         </div>
@@ -231,18 +231,18 @@ export default function Home() {
                         <span className="text-base font-bold" style={{color: '#2A2F2F'}}>{item.price.toLocaleString()}</span>
                       )}
                     </td>
-                    <td className="py-6 px-4">
+                    <td className="py-6 px-4 align-top">
                       {isEditing ? (
-                        <textarea
+                        <input
+                          type="text"
                           value={item.description}
                           onChange={(e) => updateItem(item.id, 'description', e.target.value)}
-                          className="w-full bg-transparent border-none outline-none resize-none text-sm leading-relaxed font-medium"
+                          className="w-full bg-transparent border-none outline-none text-sm font-medium"
                           style={{color: '#2A2F2F'}}
-                          rows={3}
                           placeholder="비고사항을 입력하세요..."
                         />
                       ) : (
-                        <div className="text-sm leading-relaxed whitespace-pre-line font-medium" style={{color: '#2A2F2F'}}>{item.description}</div>
+                        <div className="text-sm whitespace-pre-line font-medium" style={{color: '#2A2F2F'}}>{item.description}</div>
                       )}
                     </td>
                     {isEditing && (
@@ -262,7 +262,7 @@ export default function Home() {
 
             {/* Add Item Form */}
             {isEditing && (
-              <div className="mt-8 p-6 rounded-lg print:hidden" style={{backgroundColor: '#F2F2F2'}}>
+              <div className="mt-8 p-6 rounded-lg print:hidden" style={{backgroundColor: '#E8E8E8'}}>
                 <h4 className="text-lg font-medium mb-4" style={{color: '#2A2F2F'}}>새 항목 추가</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input
