@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 
@@ -75,7 +75,31 @@ export default function Home() {
     description: '',
   })
   const [isEditing, setIsEditing] = useState(false)
+  const [scale, setScale] = useState(1)
   const quoteRef = useRef<HTMLDivElement>(null)
+
+  // 화면 크기에 따른 scale 계산
+  useEffect(() => {
+    const calculateScale = () => {
+      const windowWidth = window.innerWidth
+      const padding = 64 // 좌우 패딩 (p-8 = 32px * 2)
+      const availableWidth = windowWidth - padding
+      const quoteMinWidth = 800 // 견적서 최소 너비
+      
+      if (availableWidth < quoteMinWidth) {
+        setScale(availableWidth / quoteMinWidth)
+      } else {
+        setScale(1)
+      }
+    }
+
+    calculateScale()
+    window.addEventListener('resize', calculateScale)
+    
+    return () => {
+      window.removeEventListener('resize', calculateScale)
+    }
+  }, [])
 
   const addItem = () => {
     if (newItem.name && newItem.price > 0) {
@@ -213,9 +237,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-8" style={{ backgroundColor: '#E8E8E8' }}>
+    <div className="min-h-screen p-8" style={{ backgroundColor: '#E8E8E8', overflowX: 'auto' }}>
       {/* Control Buttons */}
-      <div className="max-w-4xl mx-auto mb-4 print:hidden">
+      <div className="mx-auto mb-4 print:hidden" style={{ width: '800px', transform: `scale(${scale})`, transformOrigin: 'top center' }}>
         <div className="flex gap-4 flex-wrap">
           {isEditing ? (
             <>
@@ -265,8 +289,16 @@ export default function Home() {
 
       <div
         ref={quoteRef}
-        className="max-w-4xl mx-auto shadow-lg print:shadow-none"
-        style={{ backgroundColor: '#F4F4F2' }}
+        data-quote-container
+        className="mx-auto shadow-lg print:shadow-none"
+        style={{ 
+          backgroundColor: '#F4F4F2',
+          width: '800px',
+          minWidth: '800px',
+          transform: `scale(${scale})`,
+          transformOrigin: 'top center',
+          marginBottom: scale < 1 ? `${(1 - scale) * 400}px` : '0px'
+        }}
       >
         {/* Header */}
         <div
@@ -721,6 +753,12 @@ export default function Home() {
           }
           .print\\:shadow-none {
             box-shadow: none !important;
+          }
+          [data-quote-container] {
+            transform: none !important;
+            width: auto !important;
+            min-width: auto !important;
+            margin-bottom: 0 !important;
           }
           @page {
             margin: 1in;
