@@ -1,6 +1,34 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from 'next/font/local'
+ 
+const GmarketSans = localFont({
+  src: [
+    {
+      path: '/fonts/GmarketSansTTFLight.ttf',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '/fonts/GmarketSansTTFMedium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '/fonts/GmarketSansTTFBold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-gmarket-sans',
+  display: 'swap',
+})
+
+
 import "./globals.css";
+
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${GmarketSans.variable} ${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
         {children}
       </body>
