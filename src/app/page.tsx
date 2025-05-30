@@ -683,11 +683,11 @@ export default function Home() {
           className="border-t-2 border-dashed p-8 flex"
           style={{ borderColor: '#ADAFC4' }}
         >
-          <div className="w-[35%] relative">
+          <div className="w-[35%] relative flex justify-start items-end">
             <div>
-              <p className=" rotate-[-90deg] flex w-[100px] top-[46px] left-[-38px] absolute">
+              <div className="flex w-[100px]">
                 Pick Yours
-              </p>
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-start flex-1">
