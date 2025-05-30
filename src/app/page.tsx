@@ -75,6 +75,7 @@ export default function Home() {
     description: '',
   })
   const [isEditing, setIsEditing] = useState(false)
+  const [includeVAT, setIncludeVAT] = useState(false)
   const [scale, setScale] = useState(1)
   const quoteRef = useRef<HTMLDivElement>(null)
 
@@ -131,6 +132,8 @@ export default function Home() {
   }
 
   const total = items.reduce((sum, item) => sum + item.price, 0)
+  const vatAmount = total * 0.1
+  const totalWithVAT = total + vatAmount
 
   const resetItems = () => {
     if (confirm('견적 리스트를 초기화하시겠습니까?')) {
@@ -261,6 +264,15 @@ export default function Home() {
               >
                 리스트 초기화
               </button>
+              <label className="flex items-center gap-2 px-4 py-2 bg-white rounded-md border border-gray-300">
+                <input
+                  type="checkbox"
+                  checked={includeVAT}
+                  onChange={(e) => setIncludeVAT(e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-gray-700">VAT포함</span>
+              </label>
             </>
           ) : (
             <>
@@ -288,6 +300,15 @@ export default function Home() {
               >
                 리스트 초기화
               </button>
+              <label className="flex items-center gap-2 px-4 py-2 bg-white rounded-md border border-gray-300">
+                <input
+                  type="checkbox"
+                  checked={includeVAT}
+                  onChange={(e) => setIncludeVAT(e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm font-medium text-gray-700">VAT포함</span>
+              </label>
             </>
           )}
         </div>
@@ -598,12 +619,20 @@ export default function Home() {
                           }}
                         />
                       ) : (
-                        <span
-                          className="text-base font-bold"
-                          style={{ color: '#2A2F2F' }}
-                        >
-                          {item.price.toLocaleString()}
-                        </span>
+                        <div className="text-center">
+                          <span
+                            className="text-base font-bold"
+                            style={{ color: '#2A2F2F' }}
+                          >
+                            {includeVAT ? (item.price + item.price * 0.1).toLocaleString() : item.price.toLocaleString()}
+                          </span>
+                          {includeVAT && (
+                            <div className="text-xs mt-1" style={{ color: '#575859' }}>
+                              <div>공급가액: {item.price.toLocaleString()},</div>
+                              <div>부가세: {(item.price * 0.1).toLocaleString()}</div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </td>
                     <td className="py-6 px-4 align-top">
@@ -709,9 +738,18 @@ export default function Home() {
             <div className="mt-12 text-center">
               <div className="text-3xl font-bold" style={{ color: '#2A2F2F' }}>
                 총{' '}
-                <span className="ml-12 text-4xl">{total.toLocaleString()}</span>{' '}
-                <span className="text-lg font-normal ml-2">(VAT별도)</span>
+                <span className="ml-12 text-4xl">
+                  {includeVAT ? totalWithVAT.toLocaleString() : total.toLocaleString()}
+                </span>{' '}
+                <span className="text-lg font-normal ml-2">
+                  ({includeVAT ? 'VAT포함' : 'VAT별도'})
+                </span>
               </div>
+              {includeVAT && (
+                <div className="text-sm mt-2" style={{ color: '#575859' }}>
+                  (부가세: {vatAmount.toLocaleString()}원)
+                </div>
+              )}
             </div>
           </div>
         </div>
