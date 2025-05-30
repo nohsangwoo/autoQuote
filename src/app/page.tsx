@@ -82,7 +82,7 @@ export default function Home() {
   useEffect(() => {
     const calculateScale = () => {
       const windowWidth = window.innerWidth
-      const padding = 64 // 좌우 패딩 (p-8 = 32px * 2)
+      const padding = windowWidth <= 768 ? 32 : 64 // 모바일에서는 패딩을 줄임 (p-4 vs p-8)
       const availableWidth = windowWidth - padding
       const quoteMinWidth = 800 // 견적서 최소 너비
       
@@ -237,9 +237,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-8" style={{ backgroundColor: '#E8E8E8', overflowX: 'auto' }}>
+    <div className="min-h-screen p-8 mobile-responsive-main-padding" style={{ backgroundColor: '#E8E8E8', overflowX: 'auto' }}>
       {/* Control Buttons */}
-      <div className="mx-auto mb-4 print:hidden" style={{ width: '800px', transform: `scale(${scale})`, transformOrigin: 'top center' }}>
+      <div 
+        data-control-buttons
+        className="mx-auto mb-4 print:hidden" 
+        style={{ width: '800px', transform: `scale(${scale})`, transformOrigin: 'top center' }}
+      >
         <div className="flex gap-4 flex-wrap">
           {isEditing ? (
             <>
@@ -302,7 +306,7 @@ export default function Home() {
       >
         {/* Header */}
         <div
-          className="border-b-2 border-dashed px-8 pt-24 pb-8"
+          className="border-b-2 border-dashed px-8 pt-24 pb-8 mobile-responsive-padding"
           style={{ borderColor: '#ADAFC4' }}
         >
           <div className="flex justify-between items-end ">
@@ -389,21 +393,21 @@ export default function Home() {
         </div>
 
         {/* Title and Contact Info */}
-        <div className="p-8">
+        <div className="p-8 mobile-responsive-padding">
           <div className="flex justify-between items-end mb-12">
             <div>
               <div
-                className="text-4xl font-black mb-1"
+                className="text-4xl font-black mb-1 mobile-responsive-title"
                 style={{ color: '#2A2F2F' }}
               >
                 견적서 .
               </div>
-              <div className="text-4xl font-black" style={{ color: '#2A2F2F' }}>
+              <div className="text-4xl font-black mobile-responsive-title" style={{ color: '#2A2F2F' }}>
                 OFFER SHEET .
               </div>
             </div>
             <div
-              className="text-sm text-right leading-relaxed"
+              className="text-sm text-right leading-relaxed mobile-responsive-text"
               style={{ color: '#2A2F2F' }}
             >
               {isEditing ? (
@@ -492,7 +496,7 @@ export default function Home() {
 
           {/* Quote Table */}
           <div className="mb-8">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse mobile-responsive-table">
               <thead>
                 <tr className="border-b-2" style={{ borderColor: '#ADAFC4' }}>
                   <th
@@ -712,7 +716,7 @@ export default function Home() {
 
         {/* Footer */}
         <div
-          className="border-t-2 border-dashed p-8 flex"
+          className="border-t-2 border-dashed p-8 flex mobile-responsive-padding mobile-responsive-footer"
           style={{ borderColor: '#ADAFC4' }}
         >
           <div className="w-[35%] relative flex justify-start items-end">
@@ -729,7 +733,7 @@ export default function Home() {
               </div>
             </div>
             <div
-              className="text-[1rem] leading-relaxed font-thin tracking-[-0.08em] max-w-2xl ml-auto"
+              className="text-[1rem] leading-relaxed font-thin tracking-[-0.08em] max-w-2xl ml-auto mobile-responsive-table"
               style={{ color: '#575859' }}
             >
               성공을 위한 열쇠, Keykeeper는 믿을 수 있는 파트너로 최상의 결과를
@@ -743,6 +747,29 @@ export default function Home() {
 
       {/* Print Styles */}
       <style jsx global>{`
+        @media (max-width: 768px) {
+          .mobile-responsive-main-padding {
+            padding: 1rem !important;
+          }
+          .mobile-responsive-padding {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+          }
+          .mobile-responsive-text {
+            font-size: 0.875rem !important;
+          }
+          .mobile-responsive-title {
+            font-size: 2rem !important;
+          }
+          .mobile-responsive-footer {
+            flex-direction: column !important;
+            gap: 1rem !important;
+          }
+          .mobile-responsive-table {
+            font-size: 0.875rem !important;
+          }
+        }
+        
         @media print {
           body {
             background: white !important;
