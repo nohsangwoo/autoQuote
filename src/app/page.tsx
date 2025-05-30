@@ -397,12 +397,12 @@ export default function Home() {
                   }}
                 />
               ) : (
-                <div
-                  className="text-5xl font-black"
-                  style={{ color: '#2A2F2F' }}
-                >
-                  {companyInfo.name}
-                </div>
+                <img
+                  src="/KEYKEEPER_LOGO.png"
+                  alt="KEYKEEPER"
+                  className="h-12"
+                  style={{ maxHeight: '48px', width: 'auto' }}
+                />
               )}
 
               <span
