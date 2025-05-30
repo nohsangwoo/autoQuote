@@ -132,8 +132,10 @@ export default function Home() {
 
   const total = items.reduce((sum, item) => sum + item.price, 0)
 
-  const printQuote = () => {
-    window.print()
+  const resetItems = () => {
+    if (confirm('견적 리스트를 초기화하시겠습니까?')) {
+      setItems([])
+    }
   }
 
   const downloadAsImage = async () => {
@@ -254,10 +256,10 @@ export default function Home() {
                 미리보기
               </button>
               <button
-                onClick={printQuote}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                onClick={resetItems}
+                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
               >
-                인쇄하기
+                리스트 초기화
               </button>
             </>
           ) : (
@@ -281,10 +283,10 @@ export default function Home() {
                 PDF 다운로드
               </button>
               <button
-                onClick={printQuote}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                onClick={resetItems}
+                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
               >
-                인쇄하기
+                리스트 초기화
               </button>
             </>
           )}
