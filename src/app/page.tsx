@@ -86,7 +86,7 @@ export default function Home() {
       const padding = windowWidth <= 768 ? 32 : 64 // 모바일에서는 패딩을 줄임 (p-4 vs p-8)
       const availableWidth = windowWidth - padding
       const quoteMinWidth = 800 // 견적서 최소 너비
-      
+
       if (availableWidth < quoteMinWidth) {
         setScale(availableWidth / quoteMinWidth)
       } else {
@@ -96,7 +96,7 @@ export default function Home() {
 
     calculateScale()
     window.addEventListener('resize', calculateScale)
-    
+
     return () => {
       window.removeEventListener('resize', calculateScale)
     }
@@ -242,12 +242,19 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-8 mobile-responsive-main-padding" style={{ backgroundColor: '#E8E8E8', overflowX: 'auto' }}>
+    <div
+      className="min-h-screen p-8 mobile-responsive-main-padding"
+      style={{ backgroundColor: '#E8E8E8', overflowX: 'auto' }}
+    >
       {/* Control Buttons */}
-      <div 
+      <div
         data-control-buttons
-        className="mx-auto mb-4 print:hidden" 
-        style={{ width: '800px', transform: `scale(${scale})`, transformOrigin: 'top center' }}
+        className="mx-auto mb-4 print:hidden"
+        style={{
+          width: '800px',
+          transform: `scale(${scale})`,
+          transformOrigin: 'top center',
+        }}
       >
         <div className="flex gap-4 flex-wrap">
           {isEditing ? (
@@ -268,10 +275,12 @@ export default function Home() {
                 <input
                   type="checkbox"
                   checked={includeVAT}
-                  onChange={(e) => setIncludeVAT(e.target.checked)}
+                  onChange={e => setIncludeVAT(e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-medium text-gray-700">VAT포함</span>
+                <span className="text-sm font-medium text-gray-700">
+                  VAT포함
+                </span>
               </label>
             </>
           ) : (
@@ -304,10 +313,12 @@ export default function Home() {
                 <input
                   type="checkbox"
                   checked={includeVAT}
-                  onChange={(e) => setIncludeVAT(e.target.checked)}
+                  onChange={e => setIncludeVAT(e.target.checked)}
                   className="w-4 h-4"
                 />
-                <span className="text-sm font-medium text-gray-700">VAT포함</span>
+                <span className="text-sm font-medium text-gray-700">
+                  VAT포함
+                </span>
               </label>
             </>
           )}
@@ -318,13 +329,13 @@ export default function Home() {
         ref={quoteRef}
         data-quote-container
         className="mx-auto shadow-lg print:shadow-none"
-        style={{ 
+        style={{
           backgroundColor: '#F4F4F2',
           width: '800px',
           minWidth: '800px',
           transform: `scale(${scale})`,
           transformOrigin: 'top center',
-          marginBottom: scale < 1 ? `${(1 - scale) * 400}px` : '0px'
+          marginBottom: scale < 1 ? `${(1 - scale) * 400}px` : '0px',
         }}
       >
         {/* Header */}
@@ -404,13 +415,6 @@ export default function Home() {
                   style={{ maxHeight: '48px', width: 'auto' }}
                 />
               )}
-
-              <span
-                className="absolute top-0 right-[-10px] text-sm font-[700] align-top"
-                style={{ color: '#2A2F2F' }}
-              >
-                ©
-              </span>
             </div>
           </div>
         </div>
@@ -425,7 +429,10 @@ export default function Home() {
               >
                 견적서 .
               </div>
-              <div className="text-4xl font-black mobile-responsive-title" style={{ color: '#2A2F2F' }}>
+              <div
+                className="text-4xl font-black mobile-responsive-title"
+                style={{ color: '#2A2F2F' }}
+              >
                 OFFER SHEET .
               </div>
             </div>
@@ -624,12 +631,21 @@ export default function Home() {
                             className="text-base font-bold"
                             style={{ color: '#2A2F2F' }}
                           >
-                            {includeVAT ? (item.price + item.price * 0.1).toLocaleString() : item.price.toLocaleString()}
+                            {includeVAT
+                              ? (item.price + item.price * 0.1).toLocaleString()
+                              : item.price.toLocaleString()}
                           </span>
                           {includeVAT && (
-                            <div className="text-xs mt-1" style={{ color: '#575859' }}>
-                              <div>공급가액: {item.price.toLocaleString()},</div>
-                              <div>부가세: {(item.price * 0.1).toLocaleString()}</div>
+                            <div
+                              className="text-xs mt-1"
+                              style={{ color: '#575859' }}
+                            >
+                              <div>
+                                공급가액: {item.price.toLocaleString()},
+                              </div>
+                              <div>
+                                부가세: {(item.price * 0.1).toLocaleString()}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -739,7 +755,9 @@ export default function Home() {
               <div className="text-3xl font-bold" style={{ color: '#2A2F2F' }}>
                 총{' '}
                 <span className="ml-12 text-4xl">
-                  {includeVAT ? totalWithVAT.toLocaleString() : total.toLocaleString()}
+                  {includeVAT
+                    ? totalWithVAT.toLocaleString()
+                    : total.toLocaleString()}
                 </span>{' '}
                 <span className="text-lg font-normal ml-2">
                   ({includeVAT ? 'VAT포함' : 'VAT별도'})
@@ -761,9 +779,7 @@ export default function Home() {
         >
           <div className="w-[35%] relative flex justify-start items-end">
             <div>
-              <div className="flex w-[100px]">
-                Pick Yours
-              </div>
+              <div className="flex w-[100px]">Pick Yours</div>
             </div>
           </div>
           <div className="flex flex-col justify-start flex-1">
@@ -809,7 +825,7 @@ export default function Home() {
             font-size: 0.875rem !important;
           }
         }
-        
+
         @media print {
           body {
             background: white !important;
