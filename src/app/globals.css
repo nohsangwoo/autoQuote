@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Quote Colors */
+  --quote-bg: #F2F2F2;
+  --quote-text: #2A2F2F;
+  --quote-line: #ADAFC4;
+  --quote-small-text: #575859;
 }
 
 @theme inline {
@@ -11,6 +17,12 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-gmarket: var(--font-gmarket-sans);
+  
+  /* Quote theme colors */
+  --color-quote-bg: var(--quote-bg);
+  --color-quote-text: var(--quote-text);
+  --color-quote-line: var(--quote-line);
+  --color-quote-small-text: var(--quote-small-text);
 }
 
 @media (prefers-color-scheme: dark) {
