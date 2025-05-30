@@ -1,90 +1,100 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 interface QuoteItem {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
+  id: number
+  name: string
+  price: number
+  description: string
 }
 
 interface ContactInfo {
-  office: string;
-  post: string;
-  website: string;
-  bank: string;
-  account: string;
+  office: string
+  post: string
+  website: string
+  bank: string
+  account: string
 }
 
 export default function Home() {
   const [items, setItems] = useState<QuoteItem[]>([
     {
       id: 1,
-      name: "메타 광고 세팅",
+      name: '메타 광고 세팅',
       price: 450000,
-      description: "블로그 월 포스팅 12~15개\n이후 추가 및 방문자 수 작업\n키워드 및 소재에 따라 가격 변동 있음"
+      description:
+        '블로그 월 포스팅 12~15개\n이후 추가 및 방문자 수 작업\n키워드 및 소재에 따라 가격 변동 있음',
     },
     {
       id: 2,
-      name: "광고 유지 비용 (15%)",
+      name: '광고 유지 비용 (15%)',
       price: 75000,
-      description: ""
+      description: '',
     },
     {
       id: 3,
-      name: "블로그 세팅 2가지",
+      name: '블로그 세팅 2가지',
       price: 2400000,
-      description: "당근 비즈프로필 세팅\n단골 맺기 등기점업 30건\n광고 세팅, 소식 작성업 2건 포함"
+      description:
+        '당근 비즈프로필 세팅\n단골 맺기 등기점업 30건\n광고 세팅, 소식 작성업 2건 포함',
     },
     {
       id: 4,
-      name: "당근 비즈프로필 세팅",
+      name: '당근 비즈프로필 세팅',
       price: 500000,
-      description: ""
-    }
-  ]);
+      description: '',
+    },
+  ])
 
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
-    office: "OFFICE NUM. +82 10.2449.5016",
-    post: "POST NUM. 06343 4419호",
-    website: "www.keykeeperofficial.com",
-    bank: "우리은행 1005-004-602843",
-    account: "예금주 주식회사 키키파(KEYKEEPER)"
-  });
+    office: 'OFFICE NUM. +82 10.2449.5016',
+    post: 'POST NUM. 06343 4419호',
+    website: 'www.keykeeperofficial.com',
+    bank: '우리은행 1005-004-602843',
+    account: '예금주 주식회사 키키파(KEYKEEPER)',
+  })
 
-  const [newItem, setNewItem] = useState({ name: "", price: 0, description: "" });
-  const [isEditing, setIsEditing] = useState(true);
+  const [newItem, setNewItem] = useState({
+    name: '',
+    price: 0,
+    description: '',
+  })
+  const [isEditing, setIsEditing] = useState(true)
 
   const addItem = () => {
     if (newItem.name && newItem.price > 0) {
-      setItems([...items, { ...newItem, id: Date.now() }]);
-      setNewItem({ name: "", price: 0, description: "" });
+      setItems([...items, { ...newItem, id: Date.now() }])
+      setNewItem({ name: '', price: 0, description: '' })
     }
-  };
+  }
 
   const removeItem = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
-  };
+    setItems(items.filter(item => item.id !== id))
+  }
 
-  const updateItem = (id: number, field: keyof QuoteItem, value: string | number) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, [field]: value } : item
-    ));
-  };
+  const updateItem = (
+    id: number,
+    field: keyof QuoteItem,
+    value: string | number,
+  ) => {
+    setItems(
+      items.map(item => (item.id === id ? { ...item, [field]: value } : item)),
+    )
+  }
 
   const updateContactInfo = (field: keyof ContactInfo, value: string) => {
-    setContactInfo(prev => ({ ...prev, [field]: value }));
-  };
+    setContactInfo(prev => ({ ...prev, [field]: value }))
+  }
 
-  const total = items.reduce((sum, item) => sum + item.price, 0);
+  const total = items.reduce((sum, item) => sum + item.price, 0)
 
   const printQuote = () => {
-    window.print();
-  };
+    window.print()
+  }
 
   return (
-    <div className="min-h-screen p-8" style={{backgroundColor: '#E8E8E8'}}>
+    <div className="min-h-screen p-8" style={{ backgroundColor: '#E8E8E8' }}>
       {/* Control Buttons */}
       {isEditing && (
         <div className="max-w-4xl mx-auto mb-4 print:hidden">
@@ -104,7 +114,7 @@ export default function Home() {
           </div>
         </div>
       )}
-      
+
       {!isEditing && (
         <div className="max-w-4xl mx-auto mb-4 print:hidden">
           <button
@@ -116,65 +126,94 @@ export default function Home() {
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto shadow-lg print:shadow-none" style={{backgroundColor: '#F4F4F2'}}>
+      <div
+        className="max-w-4xl mx-auto shadow-lg print:shadow-none"
+        style={{ backgroundColor: '#F4F4F2' }}
+      >
         {/* Header */}
-        <div className="border-b-2 border-dashed px-8 pt-24 pb-8" style={{borderColor: '#ADAFC4'}}>
+        <div
+          className="border-b-2 border-dashed px-8 pt-24 pb-8"
+          style={{ borderColor: '#ADAFC4' }}
+        >
           <div className="flex justify-between items-end ">
-            <div className="text-sm leading-relaxed" style={{color: '#2A2F2F'}}>
+            <div
+              className="text-sm leading-relaxed"
+              style={{ color: '#2A2F2F' }}
+            >
               <div>서울특별시 강남구 압구정로 35</div>
               <div>남경빌딩 4층 4419호</div>
             </div>
             <div className="text-right flex flex-col items-end relative">
-              <h1 className="text-5xl font-black tracking-widest" style={{color: '#2A2F2F'}}>KEYKEEPER</h1>
-              <span className="absolute top-0 right-[-10px] text-sm font-[700] align-top" style={{color: '#2A2F2F'}}>©</span>
+              <h1
+                className="text-5xl font-black tracking-widest"
+                style={{ color: '#2A2F2F' }}
+              >
+                KEYKEEPER
+              </h1>
+              <span
+                className="absolute top-0 right-[-10px] text-sm font-[700] align-top"
+                style={{ color: '#2A2F2F' }}
+              >
+                ©
+              </span>
             </div>
           </div>
         </div>
 
         {/* Title and Contact Info */}
         <div className="p-8">
-          <div className="flex justify-between items-start mb-12">
+          <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-4xl font-black mb-1" style={{color: '#2A2F2F'}}>견적서 .</h2>
-              <h3 className="text-4xl font-black" style={{color: '#2A2F2F'}}>OFFER SHEET .</h3>
+              <h2
+                className="text-4xl font-black mb-1"
+                style={{ color: '#2A2F2F' }}
+              >
+                견적서 .
+              </h2>
+              <h3 className="text-4xl font-black" style={{ color: '#2A2F2F' }}>
+                OFFER SHEET .
+              </h3>
             </div>
-            <div className="text-sm text-right leading-relaxed" style={{color: '#2A2F2F'}}>
+            <div
+              className="text-sm text-right leading-relaxed"
+              style={{ color: '#2A2F2F' }}
+            >
               {isEditing ? (
                 <div className="space-y-1">
                   <input
                     type="text"
                     value={contactInfo.office}
-                    onChange={(e) => updateContactInfo('office', e.target.value)}
+                    onChange={e => updateContactInfo('office', e.target.value)}
                     className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{color: '#2A2F2F'}}
+                    style={{ color: '#2A2F2F' }}
                   />
                   <input
                     type="text"
                     value={contactInfo.post}
-                    onChange={(e) => updateContactInfo('post', e.target.value)}
+                    onChange={e => updateContactInfo('post', e.target.value)}
                     className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{color: '#2A2F2F'}}
+                    style={{ color: '#2A2F2F' }}
                   />
                   <input
                     type="text"
                     value={contactInfo.website}
-                    onChange={(e) => updateContactInfo('website', e.target.value)}
+                    onChange={e => updateContactInfo('website', e.target.value)}
                     className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{color: '#2A2F2F'}}
+                    style={{ color: '#2A2F2F' }}
                   />
                   <input
                     type="text"
                     value={contactInfo.bank}
-                    onChange={(e) => updateContactInfo('bank', e.target.value)}
+                    onChange={e => updateContactInfo('bank', e.target.value)}
                     className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{color: '#2A2F2F'}}
+                    style={{ color: '#2A2F2F' }}
                   />
                   <input
                     type="text"
                     value={contactInfo.account}
-                    onChange={(e) => updateContactInfo('account', e.target.value)}
+                    onChange={e => updateContactInfo('account', e.target.value)}
                     className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{color: '#2A2F2F'}}
+                    style={{ color: '#2A2F2F' }}
                   />
                 </div>
               ) : (
@@ -193,29 +232,72 @@ export default function Home() {
           <div className="mb-8">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b-2" style={{borderColor: '#ADAFC4'}}>
-                  <th className="text-center py-4 w-16 font-medium text-base" style={{color: '#2A2F2F'}}>NO.</th>
-                  <th className="text-center py-4 w-80 font-medium text-base" style={{color: '#2A2F2F'}}>상품명</th>
-                  <th className="text-center py-4 w-32 font-medium text-base" style={{color: '#2A2F2F'}}>단가</th>
-                  <th className="text-left py-4 font-medium text-base" style={{color: '#2A2F2F'}}>비고</th>
-                  {isEditing && <th className="text-center py-4 w-16 font-medium text-base print:hidden" style={{color: '#2A2F2F'}}>액션</th>}
+                <tr className="border-b-2" style={{ borderColor: '#ADAFC4' }}>
+                  <th
+                    className="text-center py-4 w-16 font-medium text-base"
+                    style={{ color: '#2A2F2F' }}
+                  >
+                    NO.
+                  </th>
+                  <th
+                    className="text-center py-4 w-80 font-medium text-base"
+                    style={{ color: '#2A2F2F' }}
+                  >
+                    상품명
+                  </th>
+                  <th
+                    className="text-center py-4 w-32 font-medium text-base"
+                    style={{ color: '#2A2F2F' }}
+                  >
+                    단가
+                  </th>
+                  <th
+                    className="text-center py-4 font-medium text-base"
+                    style={{ color: '#2A2F2F' }}
+                  >
+                    비고
+                  </th>
+                  {isEditing && (
+                    <th
+                      className="text-center py-4 w-16 font-medium text-base print:hidden"
+                      style={{ color: '#2A2F2F' }}
+                    >
+                      액션
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
                 {items.map((item, index) => (
-                  <tr key={item.id} className="border-b" style={{borderColor: '#ADAFC4'}}>
-                    <td className="py-6 text-center font-medium text-base" style={{color: '#2A2F2F'}}>{index + 1}.</td>
+                  <tr
+                    key={item.id}
+                    className="border-b"
+                    style={{ borderColor: '#ADAFC4' }}
+                  >
+                    <td
+                      className="py-6 text-center font-medium text-base"
+                      style={{ color: '#2A2F2F' }}
+                    >
+                      {index + 1}.
+                    </td>
                     <td className="py-6 text-center">
                       {isEditing ? (
                         <input
                           type="text"
                           value={item.name}
-                          onChange={(e) => updateItem(item.id, 'name', e.target.value)}
+                          onChange={e =>
+                            updateItem(item.id, 'name', e.target.value)
+                          }
                           className="w-full bg-transparent border-none outline-none font-semibold text-base text-center"
-                          style={{color: '#2A2F2F'}}
+                          style={{ color: '#2A2F2F' }}
                         />
                       ) : (
-                        <span className="font-semibold text-base" style={{color: '#2A2F2F'}}>{item.name}</span>
+                        <span
+                          className="font-semibold text-base"
+                          style={{ color: '#2A2F2F' }}
+                        >
+                          {item.name}
+                        </span>
                       )}
                     </td>
                     <td className="py-6 text-center">
@@ -223,12 +305,23 @@ export default function Home() {
                         <input
                           type="number"
                           value={item.price}
-                          onChange={(e) => updateItem(item.id, 'price', parseInt(e.target.value) || 0)}
+                          onChange={e =>
+                            updateItem(
+                              item.id,
+                              'price',
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
                           className="w-full bg-transparent border-none outline-none text-center text-base font-bold"
-                          style={{color: '#2A2F2F'}}
+                          style={{ color: '#2A2F2F' }}
                         />
                       ) : (
-                        <span className="text-base font-bold" style={{color: '#2A2F2F'}}>{item.price.toLocaleString()}</span>
+                        <span
+                          className="text-base font-bold"
+                          style={{ color: '#2A2F2F' }}
+                        >
+                          {item.price.toLocaleString()}
+                        </span>
                       )}
                     </td>
                     <td className="py-6 px-4 align-top">
@@ -236,13 +329,20 @@ export default function Home() {
                         <input
                           type="text"
                           value={item.description}
-                          onChange={(e) => updateItem(item.id, 'description', e.target.value)}
+                          onChange={e =>
+                            updateItem(item.id, 'description', e.target.value)
+                          }
                           className="w-full bg-transparent border-none outline-none text-sm font-medium"
-                          style={{color: '#2A2F2F'}}
+                          style={{ color: '#2A2F2F' }}
                           placeholder="비고사항을 입력하세요..."
                         />
                       ) : (
-                        <div className="text-sm whitespace-pre-line font-medium" style={{color: '#2A2F2F'}}>{item.description}</div>
+                        <div
+                          className="text-sm whitespace-pre-line font-medium"
+                          style={{ color: '#2A2F2F' }}
+                        >
+                          {item.description}
+                        </div>
                       )}
                     </td>
                     {isEditing && (
@@ -262,38 +362,55 @@ export default function Home() {
 
             {/* Add Item Form */}
             {isEditing && (
-              <div className="mt-8 p-6 rounded-lg print:hidden" style={{backgroundColor: '#E8E8E8'}}>
-                <h4 className="text-lg font-medium mb-4" style={{color: '#2A2F2F'}}>새 항목 추가</h4>
+              <div
+                className="mt-8 p-6 rounded-lg print:hidden"
+                style={{ backgroundColor: '#E8E8E8' }}
+              >
+                <h4
+                  className="text-lg font-medium mb-4"
+                  style={{ color: '#2A2F2F' }}
+                >
+                  새 항목 추가
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input
                     type="text"
                     placeholder="상품명"
                     value={newItem.name}
-                    onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                    onChange={e =>
+                      setNewItem({ ...newItem, name: e.target.value })
+                    }
                     className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    style={{borderColor: '#ADAFC4', color: '#2A2F2F'}}
+                    style={{ borderColor: '#ADAFC4', color: '#2A2F2F' }}
                   />
                   <input
                     type="number"
                     placeholder="단가"
                     value={newItem.price || ''}
-                    onChange={(e) => setNewItem({...newItem, price: parseInt(e.target.value) || 0})}
+                    onChange={e =>
+                      setNewItem({
+                        ...newItem,
+                        price: parseInt(e.target.value) || 0,
+                      })
+                    }
                     className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    style={{borderColor: '#ADAFC4', color: '#2A2F2F'}}
+                    style={{ borderColor: '#ADAFC4', color: '#2A2F2F' }}
                   />
                   <input
                     type="text"
                     placeholder="비고"
                     value={newItem.description}
-                    onChange={(e) => setNewItem({...newItem, description: e.target.value})}
+                    onChange={e =>
+                      setNewItem({ ...newItem, description: e.target.value })
+                    }
                     className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    style={{borderColor: '#ADAFC4', color: '#2A2F2F'}}
+                    style={{ borderColor: '#ADAFC4', color: '#2A2F2F' }}
                   />
                 </div>
                 <button
                   onClick={addItem}
                   className="mt-4 px-6 py-2 text-white rounded-md hover:opacity-90 transition-colors"
-                  style={{backgroundColor: '#2A2F2F'}}
+                  style={{ backgroundColor: '#2A2F2F' }}
                 >
                   항목 추가
                 </button>
@@ -302,22 +419,40 @@ export default function Home() {
 
             {/* Total */}
             <div className="mt-12 text-center">
-              <div className="text-3xl font-bold" style={{color: '#2A2F2F'}}>
-                총 <span className="ml-12 text-4xl">{total.toLocaleString()}</span> <span className="text-lg font-normal ml-2">(VAT별도)</span>
+              <div className="text-3xl font-bold" style={{ color: '#2A2F2F' }}>
+                총{' '}
+                <span className="ml-12 text-4xl">{total.toLocaleString()}</span>{' '}
+                <span className="text-lg font-normal ml-2">(VAT별도)</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="border-t-2 border-dashed p-8" style={{borderColor: '#ADAFC4'}}>
-          <div className="text-right mb-6">
-            <h3 className="text-2xl font-bold" style={{color: '#2A2F2F'}}>KEYKEEPER.</h3>
+        <div
+          className="border-t-2 border-dashed p-8 flex"
+          style={{ borderColor: '#ADAFC4' }}
+        >
+          <div className="w-[35%] relative">
+            <div>
+              <p className=" rotate-[-90deg] flex w-[100px] top-[46px] left-[-38px] absolute">Pick Yours</p>
+            </div>
           </div>
-          <div className="text-sm leading-relaxed max-w-2xl ml-auto" style={{color: '#575859'}}>
-            성공을 위한 열쇠, Keykeeper는 믿을 수 있는 파트너로 최상의 결과를 신뢰에
-            보답하겠습니다. 그리고 투철한 모든 정성으로 A-Z까지 전문가의 자세로 임하고
-            있습니다. 마지막으로 ESG 경영철학을 통해 지속 가능한 가치를 창출하고 있습니다.
+          <div className="flex flex-col justify-start flex-1">
+            <div className="text-left">
+              <h3 className="text-2xl font-bold" style={{ color: '#575859' }}>
+                KEYKEEPER.
+              </h3>
+            </div>
+            <div
+              className="text-[1rem] leading-relaxed font-thin tracking-[-0.08em] max-w-2xl ml-auto"
+              style={{ color: '#575859' }}
+            >
+              성공을 위한 열쇠, Keykeeper는 믿을 수 있는 파트너로 최상의 결과를
+              신뢰에 보답하겠습니다. 그리고 투철한 모든 정성으로 A-Z까지
+              전문가의 자세로 임하고 있습니다. 마지막으로 ESG 경영철학을 통해
+              지속 가능한 가치를 창출하고 있습니다.
+            </div>
           </div>
         </div>
       </div>
@@ -342,5 +477,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  );
+  )
 }
