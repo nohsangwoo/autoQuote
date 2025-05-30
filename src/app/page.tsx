@@ -74,7 +74,7 @@ export default function Home() {
     price: 0,
     description: '',
   })
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
   const quoteRef = useRef<HTMLDivElement>(null)
 
   const addItem = () => {
@@ -115,15 +115,35 @@ export default function Home() {
   const downloadAsImage = async () => {
     if (quoteRef.current) {
       try {
+        // 캡처 전에 스크롤을 맨 위로 이동
+        window.scrollTo(0, 0)
+
         const canvas = await html2canvas(quoteRef.current, {
           scale: 2,
           backgroundColor: '#F4F4F2',
           useCORS: true,
+          allowTaint: true,
+          foreignObjectRendering: false,
+          logging: false,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: quoteRef.current.scrollWidth,
+          windowHeight: quoteRef.current.scrollHeight,
+          ignoreElements: element => {
+            // print:hidden 클래스가 있는 요소들 제외
+            const htmlElement = element as HTMLElement
+            return (
+              element.classList.contains('print:hidden') ||
+              htmlElement.style.display === 'none'
+            )
+          },
         })
-        
+
         const link = document.createElement('a')
         link.download = `견적서_${new Date().toISOString().split('T')[0]}.png`
-        link.href = canvas.toDataURL()
+        link.href = canvas.toDataURL('image/png', 1.0)
         link.click()
       } catch (error) {
         console.error('이미지 다운로드 실패:', error)
@@ -135,36 +155,55 @@ export default function Home() {
   const downloadAsPDF = async () => {
     if (quoteRef.current) {
       try {
+        // 캡처 전에 스크롤을 맨 위로 이동
+        window.scrollTo(0, 0)
+
         const canvas = await html2canvas(quoteRef.current, {
           scale: 2,
           backgroundColor: '#F4F4F2',
           useCORS: true,
+          allowTaint: true,
+          foreignObjectRendering: false,
+          logging: false,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: quoteRef.current.scrollWidth,
+          windowHeight: quoteRef.current.scrollHeight,
+          ignoreElements: element => {
+            const htmlElement = element as HTMLElement
+            return (
+              element.classList.contains('print:hidden') ||
+              htmlElement.style.display === 'none'
+            )
+          },
         })
-        
-        const imgData = canvas.toDataURL('image/png')
+
+        const imgData = canvas.toDataURL('image/png', 1.0)
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
           format: 'a4',
         })
-        
+
         const imgWidth = 210 // A4 width in mm
         const pageHeight = 295 // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width
         let heightLeft = imgHeight
-        
+
         let position = 0
-        
+
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
         heightLeft -= pageHeight
-        
+
         while (heightLeft >= 0) {
           position = heightLeft - imgHeight
           pdf.addPage()
           pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
           heightLeft -= pageHeight
         }
-        
+
         pdf.save(`견적서_${new Date().toISOString().split('T')[0]}.pdf`)
       } catch (error) {
         console.error('PDF 다운로드 실패:', error)
@@ -244,16 +283,33 @@ export default function Home() {
                   <input
                     type="text"
                     value={companyInfo.address1}
-                    onChange={e => updateCompanyInfo('address1', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-sm block mb-1"
-                    style={{ color: '#2A2F2F' }}
+                    onChange={e =>
+                      updateCompanyInfo('address1', e.target.value)
+                    }
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      marginBottom: '4px',
+                      display: 'block',
+                      width: '100%',
+                    }}
                   />
                   <input
                     type="text"
                     value={companyInfo.address2}
-                    onChange={e => updateCompanyInfo('address2', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-sm block"
-                    style={{ color: '#2A2F2F' }}
+                    onChange={e =>
+                      updateCompanyInfo('address2', e.target.value)
+                    }
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      display: 'block',
+                      width: '100%',
+                    }}
                   />
                 </>
               ) : (
@@ -269,17 +325,27 @@ export default function Home() {
                   type="text"
                   value={companyInfo.name}
                   onChange={e => updateCompanyInfo('name', e.target.value)}
-                  className="text-5xl font-black tracking-widest bg-transparent border-none outline-none text-right"
-                  style={{ color: '#2A2F2F' }}
+                  className="bg-transparent border-none outline-none text-right"
+                  style={{
+                    color: '#2A2F2F',
+                    fontSize: '3rem',
+                    fontWeight: '700',
+                    letterSpacing: '0.1em',
+                    lineHeight: '1',
+                    textAlign: 'right',
+                    width: 'auto',
+                    minWidth: '200px',
+                  }}
                 />
               ) : (
-                <h1
-                  className="text-5xl font-black tracking-widest"
+                <div
+                  className="text-5xl font-black"
                   style={{ color: '#2A2F2F' }}
                 >
                   {companyInfo.name}
-                </h1>
+                </div>
               )}
+
               <span
                 className="absolute top-0 right-[-10px] text-sm font-[700] align-top"
                 style={{ color: '#2A2F2F' }}
@@ -294,15 +360,15 @@ export default function Home() {
         <div className="p-8">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <h2
+              <div
                 className="text-4xl font-black mb-1"
                 style={{ color: '#2A2F2F' }}
               >
                 견적서 .
-              </h2>
-              <h3 className="text-4xl font-black" style={{ color: '#2A2F2F' }}>
+              </div>
+              <div className="text-4xl font-black" style={{ color: '#2A2F2F' }}>
                 OFFER SHEET .
-              </h3>
+              </div>
             </div>
             <div
               className="text-sm text-right leading-relaxed"
@@ -314,36 +380,70 @@ export default function Home() {
                     type="text"
                     value={contactInfo.office}
                     onChange={e => updateContactInfo('office', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{ color: '#2A2F2F' }}
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      textAlign: 'right',
+                      width: '100%',
+                      marginBottom: '4px',
+                    }}
                   />
                   <input
                     type="text"
                     value={contactInfo.post}
                     onChange={e => updateContactInfo('post', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{ color: '#2A2F2F' }}
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      textAlign: 'right',
+                      width: '100%',
+                      marginBottom: '4px',
+                    }}
                   />
                   <input
                     type="text"
                     value={contactInfo.website}
                     onChange={e => updateContactInfo('website', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{ color: '#2A2F2F' }}
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      textAlign: 'right',
+                      width: '100%',
+                      marginBottom: '4px',
+                    }}
                   />
                   <input
                     type="text"
                     value={contactInfo.bank}
                     onChange={e => updateContactInfo('bank', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{ color: '#2A2F2F' }}
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      textAlign: 'right',
+                      width: '100%',
+                      marginBottom: '4px',
+                    }}
                   />
                   <input
                     type="text"
                     value={contactInfo.account}
                     onChange={e => updateContactInfo('account', e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-right text-sm"
-                    style={{ color: '#2A2F2F' }}
+                    className="w-full bg-transparent border-none outline-none"
+                    style={{
+                      color: '#2A2F2F',
+                      fontSize: '14px',
+                      lineHeight: '1.5',
+                      textAlign: 'right',
+                      width: '100%',
+                    }}
                   />
                 </div>
               ) : (
@@ -418,8 +518,15 @@ export default function Home() {
                           onChange={e =>
                             updateItem(item.id, 'name', e.target.value)
                           }
-                          className="w-full bg-transparent border-none outline-none font-semibold text-base text-center"
-                          style={{ color: '#2A2F2F' }}
+                          className="w-full bg-transparent border-none outline-none"
+                          style={{
+                            color: '#2A2F2F',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            textAlign: 'center',
+                            width: '100%',
+                            lineHeight: '1.5',
+                          }}
                         />
                       ) : (
                         <span
@@ -442,8 +549,15 @@ export default function Home() {
                               parseInt(e.target.value) || 0,
                             )
                           }
-                          className="w-full bg-transparent border-none outline-none text-center text-base font-bold"
-                          style={{ color: '#2A2F2F' }}
+                          className="w-full bg-transparent border-none outline-none"
+                          style={{
+                            color: '#2A2F2F',
+                            fontSize: '16px',
+                            fontWeight: '700',
+                            textAlign: 'center',
+                            width: '100%',
+                            lineHeight: '1.5',
+                          }}
                         />
                       ) : (
                         <span
@@ -462,8 +576,14 @@ export default function Home() {
                           onChange={e =>
                             updateItem(item.id, 'description', e.target.value)
                           }
-                          className="w-full bg-transparent border-none outline-none text-sm font-medium"
-                          style={{ color: '#2A2F2F' }}
+                          className="w-full bg-transparent border-none outline-none"
+                          style={{
+                            color: '#2A2F2F',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            width: '100%',
+                            lineHeight: '1.5',
+                          }}
                           placeholder="비고사항을 입력하세요..."
                         />
                       ) : (
@@ -496,12 +616,12 @@ export default function Home() {
                 className="mt-8 p-6 rounded-lg print:hidden"
                 style={{ backgroundColor: '#E8E8E8' }}
               >
-                <h4
+                <div
                   className="text-lg font-medium mb-4"
                   style={{ color: '#2A2F2F' }}
                 >
                   새 항목 추가
-                </h4>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <input
                     type="text"
@@ -572,9 +692,9 @@ export default function Home() {
           </div>
           <div className="flex flex-col justify-start flex-1">
             <div className="text-left">
-              <h3 className="text-2xl font-bold" style={{ color: '#575859' }}>
+              <div className="text-2xl font-[700]" style={{ color: '#575859' }}>
                 KEYKEEPER.
-              </h3>
+              </div>
             </div>
             <div
               className="text-[1rem] leading-relaxed font-thin tracking-[-0.08em] max-w-2xl ml-auto"
