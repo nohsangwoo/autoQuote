@@ -1,6 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 interface QuoteItem {
   id: number
@@ -15,6 +17,12 @@ interface ContactInfo {
   website: string
   bank: string
   account: string
+}
+
+interface CompanyInfo {
+  name: string
+  address1: string
+  address2: string
 }
 
 export default function Home() {
@@ -52,7 +60,13 @@ export default function Home() {
     post: 'POST NUM. 06343 4419호',
     website: 'www.keykeeperofficial.com',
     bank: '우리은행 1005-004-602843',
-    account: '예금주 주식회사 키키파(KEYKEEPER)',
+    account: '예금주 주식회사 키키퍼(KEYKEEPER)',
+  })
+
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
+    name: 'KEYKEEPER',
+    address1: '서울특별시 강남구 압구정로 35',
+    address2: '남경빌딩 4층 4419호',
   })
 
   const [newItem, setNewItem] = useState({
@@ -61,6 +75,7 @@ export default function Home() {
     description: '',
   })
   const [isEditing, setIsEditing] = useState(true)
+  const quoteRef = useRef<HTMLDivElement>(null)
 
   const addItem = () => {
     if (newItem.name && newItem.price > 0) {
@@ -87,46 +102,130 @@ export default function Home() {
     setContactInfo(prev => ({ ...prev, [field]: value }))
   }
 
+  const updateCompanyInfo = (field: keyof CompanyInfo, value: string) => {
+    setCompanyInfo(prev => ({ ...prev, [field]: value }))
+  }
+
   const total = items.reduce((sum, item) => sum + item.price, 0)
 
   const printQuote = () => {
     window.print()
   }
 
+  const downloadAsImage = async () => {
+    if (quoteRef.current) {
+      try {
+        const canvas = await html2canvas(quoteRef.current, {
+          scale: 2,
+          backgroundColor: '#F4F4F2',
+          useCORS: true,
+        })
+        
+        const link = document.createElement('a')
+        link.download = `견적서_${new Date().toISOString().split('T')[0]}.png`
+        link.href = canvas.toDataURL()
+        link.click()
+      } catch (error) {
+        console.error('이미지 다운로드 실패:', error)
+        alert('이미지 다운로드에 실패했습니다.')
+      }
+    }
+  }
+
+  const downloadAsPDF = async () => {
+    if (quoteRef.current) {
+      try {
+        const canvas = await html2canvas(quoteRef.current, {
+          scale: 2,
+          backgroundColor: '#F4F4F2',
+          useCORS: true,
+        })
+        
+        const imgData = canvas.toDataURL('image/png')
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+        })
+        
+        const imgWidth = 210 // A4 width in mm
+        const pageHeight = 295 // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
+        let heightLeft = imgHeight
+        
+        let position = 0
+        
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+        
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight
+          pdf.addPage()
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+          heightLeft -= pageHeight
+        }
+        
+        pdf.save(`견적서_${new Date().toISOString().split('T')[0]}.pdf`)
+      } catch (error) {
+        console.error('PDF 다운로드 실패:', error)
+        alert('PDF 다운로드에 실패했습니다.')
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen p-8" style={{ backgroundColor: '#E8E8E8' }}>
       {/* Control Buttons */}
-      {isEditing && (
-        <div className="max-w-4xl mx-auto mb-4 print:hidden">
-          <div className="flex gap-4">
-            <button
-              onClick={() => setIsEditing(false)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              미리보기
-            </button>
-            <button
-              onClick={printQuote}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-            >
-              인쇄하기
-            </button>
-          </div>
+      <div className="max-w-4xl mx-auto mb-4 print:hidden">
+        <div className="flex gap-4 flex-wrap">
+          {isEditing ? (
+            <>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                미리보기
+              </button>
+              <button
+                onClick={printQuote}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                인쇄하기
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+              >
+                편집 모드
+              </button>
+              <button
+                onClick={downloadAsImage}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+              >
+                이미지 다운로드
+              </button>
+              <button
+                onClick={downloadAsPDF}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                PDF 다운로드
+              </button>
+              <button
+                onClick={printQuote}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                인쇄하기
+              </button>
+            </>
+          )}
         </div>
-      )}
-
-      {!isEditing && (
-        <div className="max-w-4xl mx-auto mb-4 print:hidden">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-          >
-            편집 모드로 돌아가기
-          </button>
-        </div>
-      )}
+      </div>
 
       <div
+        ref={quoteRef}
         className="max-w-4xl mx-auto shadow-lg print:shadow-none"
         style={{ backgroundColor: '#F4F4F2' }}
       >
@@ -140,16 +239,47 @@ export default function Home() {
               className="text-sm leading-relaxed"
               style={{ color: '#2A2F2F' }}
             >
-              <div>서울특별시 강남구 압구정로 35</div>
-              <div>남경빌딩 4층 4419호</div>
+              {isEditing ? (
+                <>
+                  <input
+                    type="text"
+                    value={companyInfo.address1}
+                    onChange={e => updateCompanyInfo('address1', e.target.value)}
+                    className="w-full bg-transparent border-none outline-none text-sm block mb-1"
+                    style={{ color: '#2A2F2F' }}
+                  />
+                  <input
+                    type="text"
+                    value={companyInfo.address2}
+                    onChange={e => updateCompanyInfo('address2', e.target.value)}
+                    className="w-full bg-transparent border-none outline-none text-sm block"
+                    style={{ color: '#2A2F2F' }}
+                  />
+                </>
+              ) : (
+                <>
+                  <div>{companyInfo.address1}</div>
+                  <div>{companyInfo.address2}</div>
+                </>
+              )}
             </div>
             <div className="text-right flex flex-col items-end relative">
-              <h1
-                className="text-5xl font-black tracking-widest"
-                style={{ color: '#2A2F2F' }}
-              >
-                KEYKEEPER
-              </h1>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={companyInfo.name}
+                  onChange={e => updateCompanyInfo('name', e.target.value)}
+                  className="text-5xl font-black tracking-widest bg-transparent border-none outline-none text-right"
+                  style={{ color: '#2A2F2F' }}
+                />
+              ) : (
+                <h1
+                  className="text-5xl font-black tracking-widest"
+                  style={{ color: '#2A2F2F' }}
+                >
+                  {companyInfo.name}
+                </h1>
+              )}
               <span
                 className="absolute top-0 right-[-10px] text-sm font-[700] align-top"
                 style={{ color: '#2A2F2F' }}
@@ -435,7 +565,9 @@ export default function Home() {
         >
           <div className="w-[35%] relative">
             <div>
-              <p className=" rotate-[-90deg] flex w-[100px] top-[46px] left-[-38px] absolute">Pick Yours</p>
+              <p className=" rotate-[-90deg] flex w-[100px] top-[46px] left-[-38px] absolute">
+                Pick Yours
+              </p>
             </div>
           </div>
           <div className="flex flex-col justify-start flex-1">
